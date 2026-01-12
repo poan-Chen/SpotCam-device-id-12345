@@ -29,6 +29,7 @@
 
     // 你要帶進 App 的參數
     var vcaItem = "1";
+    var isFree = "1";
 
     // 是否在點擊後「離開過這個頁面」（例如跳去 App）
     var hasVisibilityChanged = false;
@@ -51,7 +52,7 @@
     });
 
     function openApp() {
-      var appUrl = "SpotCam://VcaItem?vca=" + encodeURIComponent(vcaItem);
+      var appUrl = "SpotCam://VcaItem?vca=" + encodeURIComponent(vcaItem) + "&free=" + encodeURIComponent(isFree);
       log("嘗試開啟 App: " + appUrl);
 
       // 每次按下前先重置
