@@ -28,7 +28,7 @@
     var appStoreUrl = "itms-apps://itunes.apple.com/app/apple-store/id908179081";
 
     // 你要帶進 App 的參數
-    var deviceId = "12345";
+    var vcaItem = "1";
 
     // 是否在點擊後「離開過這個頁面」（例如跳去 App）
     var hasVisibilityChanged = false;
@@ -51,7 +51,7 @@
     });
 
     function openApp() {
-      var appUrl = "SpotCam://device?id=" + encodeURIComponent(deviceId);
+      var appUrl = "SpotCam://VcaItem?vca=" + encodeURIComponent(vcaItem);
       log("嘗試開啟 App: " + appUrl);
 
       // 每次按下前先重置
