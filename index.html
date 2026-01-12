@@ -15,7 +15,7 @@
   <h1>SpotCam Deep Link 測試</h1>
   <p>
     按「開啟 SpotCam App」：<br/>
-    ・如果有安裝並支援 <code>SpotCam://device?id=12345</code>，會直接開 App。<br/>
+    ・如果有安裝並支援 <code>SpotCam://vcaitem?vca=1</code>，會直接開 App。<br/>
     ・如果沒有安裝，幾秒後會自動帶你去 App Store。
   </p>
 
@@ -52,7 +52,7 @@
     });
 
     function openApp() {
-      var appUrl = "SpotCam://VcaItem?vca=" + encodeURIComponent(vcaItem) + "&free=" + encodeURIComponent(isFree);
+      var appUrl = "SpotCam://vcaitem?vca=" + encodeURIComponent(vcaItem) + "&free=" + encodeURIComponent(isFree);
       log("嘗試開啟 App: " + appUrl);
 
       // 每次按下前先重置
