@@ -6,8 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 16px; }
-    .btn { display: inline-block; padding: 10px 16px; background: #007aff; color: #fff; border-radius: 8px; text-decoration: none; margin-right: 8px; }
-    .btn.secondary { background: #34c759; }
+    .btn { display: inline-block; padding: 10px 16px; background: #007aff; color: #fff; border-radius: 8px; text-decoration: none; }
     .btn:active { opacity: 0.7; }
     .log { margin-top: 16px; font-size: 14px; color: #555; white-space: pre-wrap; }
   </style>
@@ -15,12 +14,12 @@
 <body>
   <h1>SpotCam Deep Link 測試</h1>
   <p>
-    1. 按「開啟 SpotCam App」：如果有安裝並支援 <code>SpotCam://device?id=12345</code>，就會直接開 App。<br/>
-    2. 如果沒有自動開 App，再按「前往 App Store 下載」。
+    按「開啟 SpotCam App」：<br/>
+    ・如果有安裝並支援 <code>SpotCam://device?id=12345</code>，會直接開 App。<br/>
+    ・如果沒有安裝，幾秒後會自動帶你去 App Store。
   </p>
 
   <a href="#" class="btn" onclick="openApp(); return false;">開啟 SpotCam App</a>
-  <a href="#" class="btn secondary" onclick="goToStore(); return false;">前往 App Store 下載</a>
 
   <div class="log" id="log"></div>
 
@@ -31,6 +30,9 @@
     // 你要帶進 App 的參數
     var deviceId = "12345";
 
+    // 是否在點擊後「離開過這個頁面」（例如跳去 App）
+    var hasVisibilityChanged = false;
+
     function log(msg) {
       var el = document.getElementById("log");
       if (el) {
@@ -38,16 +40,35 @@
       }
     }
 
+    // 偵測頁面是否被切到背景（使用者進 App、切換 App 等）
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        hasVisibilityChanged = true;
+        log("頁面變為隱藏，可能已切換到 App。");
+      } else {
+        log("頁面重新可見。");
+      }
+    });
+
     function openApp() {
       var appUrl = "SpotCam://device?id=" + encodeURIComponent(deviceId);
       log("嘗試開啟 App: " + appUrl);
-      window.location.href = appUrl;
-      // 不自動跳 App Store，交給使用者自己判斷有沒有成功開啟
-    }
 
-    function goToStore() {
-      log("前往 App Store: " + appStoreUrl);
-      window.location.href = appStoreUrl;
+      // 每次按下前先重置
+      hasVisibilityChanged = false;
+
+      // 嘗試打開 App
+      window.location.href = appUrl;
+
+      // 過一段時間檢查：如果還在網頁（visibility 沒變），才導去 App Store
+      setTimeout(function () {
+        if (!hasVisibilityChanged) {
+          log("仍然停留在網頁，準備前往 App Store: " + appStoreUrl);
+          window.location.href = appStoreUrl;
+        } else {
+          log("偵測到已離開頁面，不前往 App Store。");
+        }
+      }, 2000); // 可依實際情況調成 1500~3000ms
     }
   </script>
 </body>
