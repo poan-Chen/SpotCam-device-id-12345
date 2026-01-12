@@ -28,8 +28,9 @@
     var appStoreUrl = "itms-apps://itunes.apple.com/app/apple-store/id908179081";
 
     // 你要帶進 App 的參數
-    var vcaItem = "1";
-    var isFree = "1";
+    var vcaItem = "1"; // 哪一個方案
+    var isFree = "1"; // 1:試用，0:訂閱
+    var viewMode = "1" // 0:影像，1:聲音
 
     // 是否在點擊後「離開過這個頁面」（例如跳去 App）
     var hasVisibilityChanged = false;
@@ -52,7 +53,7 @@
     });
 
     function openApp() {
-      var appUrl = "SpotCam://vcaitem?vca=" + encodeURIComponent(vcaItem) + "&free=" + encodeURIComponent(isFree);
+      var appUrl = "SpotCam://vcaitem?vca=" + encodeURIComponent(vcaItem) + "&free=" + encodeURIComponent(isFree) +"&mode=" + encodeURIComponent(viewMode);
       log("嘗試開啟 App: " + appUrl);
 
       // 每次按下前先重置
