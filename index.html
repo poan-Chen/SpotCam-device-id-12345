@@ -1,55 +1,47 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8" />
-  <title>SpotCam Deep Link 測試</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; padding: 16px; }
-    .btn { display: inline-block; padding: 10px 16px; background: #007aff; color: #fff; border-radius: 8px; text-decoration: none; }
-    .btn:active { opacity: 0.7; }
-    .log { margin-top: 16px; font-size: 14px; color: #555; white-space: pre-wrap; }
-  </style>
-</head>
-<body>
-  <h1>SpotCam Deep Link 測試</h1>
-  <p>這個頁面會嘗試打開 <code>SpotCam://device?id=12345</code>，如果失敗就導到 App Store。</p>
+<script>
+  // SpotCam 在 App Store 的正式連結
+  var appStoreUrl = "https://apps.apple.com/tw/app/spotcam/id908179081";
+  var deviceId = "12345";
 
-  <a href="#" class="btn" onclick="openApp(); return false;">立即測試開啟 App</a>
+  var hasVisibilityChanged = false;
 
-  <div class="log" id="log"></div>
-
-  <script>
-    // TODO: 替換成你自己的 App Store 連結
-    // 例如：https://apps.apple.com/app/id1234567890
-    var appStoreUrl = "https://apps.apple.com/tw/app/spotcam/id908179081";
-
-    // 你要帶進 App 的參數
-    var deviceId = "12345";
-
-    function log(msg) {
-      var el = document.getElementById("log");
+  function log(msg) {
+    var el = document.getElementById("log");
+    if (el) {
       el.textContent += msg + "\n";
     }
+  }
 
-    function openApp() {
-      log("開始嘗試開啟 App...");
-
-      var appUrl = "SpotCam://device?id=" + encodeURIComponent(deviceId);
-      log("App URL: " + appUrl);
-
-      // 嘗試打開 App
-      window.location.href = appUrl;
-
-      // 設定 fallback：如果 1.5 秒後還在這個頁面，就跳 App Store
-      setTimeout(function () {
-        log("若未成功跳轉 App，準備前往 App Store。");
-        window.location.href = appStoreUrl;
-      }, 1500);
+  // 偵測使用者是否離開這個頁面（例如被切到 App）
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) {
+      hasVisibilityChanged = true;
+      log("頁面變為隱藏，可能已切換到 App。");
+    } else {
+      log("頁面重新可見。");
     }
+  });
 
-    // 如果想一打開頁面就自動測試，可以改成：
-    // window.onload = openApp;
-  </script>
-</body>
-</html>
+  function openApp() {
+    log("開始嘗試開啟 App...");
+
+    var appUrl = "SpotCam://device?id=" + encodeURIComponent(deviceId);
+    log("App URL: " + appUrl);
+
+    // 重置狀態
+    hasVisibilityChanged = false;
+
+    // 嘗試打開 App
+    window.location.href = appUrl;
+
+    // 設定 fallback：只有在「還停在瀏覽器」時才跳 App Store
+    setTimeout(function () {
+      if (!hasVisibilityChanged) {
+        log("仍然停留在網頁，準備前往 App Store。");
+        window.location.href = appStoreUrl;
+      } else {
+        log("偵測到已離開頁面，不跳 App Store。");
+      }
+    }, 1500);
+  }
+</script>
