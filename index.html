@@ -53,7 +53,8 @@
     });
 
     function openApp() {
-      var appUrl = "SpotCam://vcaitem?vca=" + encodeURIComponent(vcaItem) + "&free=" + encodeURIComponent(isFree) +"&mode=" + encodeURIComponent(viewMode);
+      // var appUrl = "SpotCam://vcaitem?vca=" + encodeURIComponent(vcaItem) + "&free=" + encodeURIComponent(isFree) +"&mode=" + encodeURIComponent(viewMode);
+      var appUrl = "SpotCam://mobile_vca/" + "indoor";
       log("嘗試開啟 App: " + appUrl);
 
       // 每次按下前先重置
